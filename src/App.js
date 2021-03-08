@@ -1,27 +1,44 @@
 import React, { Component } from "react";
 import "./App.css";
-import Output from "./components/UserOutput";
-import Input from "./components/UserInput";
+import Validation from "./Components/ValidationComponent";
+import Char from "./Components/Char";
 
 class App extends Component {
   state = {
-    username: "gabeNovsky",
+    userInput: "",
   };
 
-  inputHandler = (event) => {
-    this.setState({ username: event.target.value });
+  inputChangeHandler = (event) => {
+    this.setState({ userInput: event.target.value });
+  };
+
+  deleteBox = (index) => {
+    const text = this.state.userInput.split("");
+    text.splice(index, 1);
+    const updatedText = text.join("");
+    this.setState({ userInput: updatedText });
   };
 
   render() {
+    let charList = this.state.userInput.split("").map((ch, index) => {
+      return (
+        <Char
+          character={ch}
+          key={index}
+          clicked={() => this.deleteBox(index)}
+        />
+      );
+    });
     return (
       <div>
-        <Input
-          userChange={this.inputHandler}
-          currentUserName={this.state.username}
+        <input
+          type="text"
+          onChange={this.inputChangeHandler}
+          value={this.state.userInput}
         />
-        <Output userName={this.state.username} />
-        <Output userName="Novsky" />
-        <Output userName="gabrielnovsky" />
+        <p>{this.state.userInput}</p>
+        <Validation inputLength={this.state.userInput.length} />
+        {charList}
       </div>
     );
   }
